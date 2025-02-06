@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: My_Root_Password
+      MYSQL_DATABASE: auth_app_db
+      MYSQL_USER: auth_user
+      MYSQL_PASSWORD: My_User_Password
+    networks:
+      - auth_net
+    ports:
+      - "3306:3306"
+
+  auth-app:
+    build: .
+    container_name: auth-app
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: mariadb
+      DB_USER: auth_user
+      DB_PASSWORD: My_User_Password
+      DB_NAME: auth_app_db
+    networks:
+      - auth_net
+    depends_on:
+      - mariadb
+
+networks:
+  auth_net:
+    external: true
