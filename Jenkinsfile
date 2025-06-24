@@ -22,19 +22,20 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv("${SONARQUBE_ENV}") {
-                    script {
-                        sh 'sonar-scanner \
-                          -Dsonar.projectKey=auth-app \
-                          -Dsonar.sources=. \
-                          -Dsonar.host.url=http://192.168.1.76:9000 \
-                          -Dsonar.login=<squ_22e5db6b805a0ac9e3a74f2c4f6a92486501f040>'
-                    }
-                }
+    stage('SonarQube Analysis') {
+        steps {
+            withSonarQubeEnv('SonarQube') {
+                sh """
+                cd auth-app
+                /opt/sonarscanner/bin/sonar-scanner \
+                -Dsonar.projectKey=auth-app \
+                -Dsonar.sources=. \
+                -Dsonar.host.url=http://192.168.1.76:9000 \
+                -Dsonar.login=squ_22e5db6b805a0ac9e3a74f2c4f6a92486501f040
+                """
             }
         }
+    }
 
         // stage('Push to Docker Registry') {
         //     steps {
